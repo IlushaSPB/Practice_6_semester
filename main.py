@@ -43,7 +43,6 @@ class SP:
         check = BeautifulSoup(self.driver.find_element(By.XPATH,"/html/body/div[2]/ui-view/ui-view-ng-upgrade/ui-view/app-registry/div[2]/div/div[1]/h3/span").get_attribute('outerHTML'), "html.parser")
         tot = check.find("span").text
         total_found = int(tot.replace('\xa0', '').strip())
-        print(total_found)
 
         for p in range(1, (total_found//30 + 2)):
 
@@ -57,7 +56,6 @@ class SP:
             checking = BeautifulSoup(self.driver.find_element(By.XPATH,"/html/body/div[2]/ui-view/ui-view-ng-upgrade/ui-view/app-registry/div[2]/div/div[1]/h3/span").get_attribute('outerHTML'), "html.parser")
             what = int((checking.find("span").text).replace('\xa0', '').strip())
 
-            print(what)
             if what == 0:
                 break
 
