@@ -66,7 +66,6 @@ class SP:
                 file.write('\n'.join([x.attrs['href'] for x in soup.find_all('a', {'class': 'result__title ng-star-inserted'})]) + '\n')
             with open('dop_hrefs.txt', 'a') as file:
                 file.write(' '.join([x.attrs['href'] for x in soup.find_all('a', {'class': 'result__title ng-star-inserted'})]))
-            print([x.attrs['href'] for x in soup.find_all('a', {'class': 'result__title ng-star-inserted'})])
 
         with open('dop_hrefs.txt', 'a', encoding='utf-8') as file:
             file.write(' ' + city + '\n')
