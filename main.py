@@ -43,22 +43,30 @@ class SP:
         check = BeautifulSoup(self.driver.find_element(By.XPATH,"/html/body/div[2]/ui-view/ui-view-ng-upgrade/ui-view/app-registry/div[2]/div/div[1]/h3/span").get_attribute('outerHTML'), "html.parser")
         tot = check.find("span").text
         total_found = int(tot.replace('\xa0', '').strip())
-        print(total_found)
 
         for p in range(1, (total_found//30 + 2)):
-            if total_found > 1000:
+
+            if total_found > 1000 or total_found == 0:
                 break
             if total_found % 30 == 0 and p > total_found//30:
                 continue
+
             self.get_page(p,city)
+
+            checking = BeautifulSoup(self.driver.find_element(By.XPATH,"/html/body/div[2]/ui-view/ui-view-ng-upgrade/ui-view/app-registry/div[2]/div/div[1]/h3/span").get_attribute('outerHTML'), "html.parser")
+            what = int((checking.find("span").text).replace('\xa0', '').strip())
+            if what == 0:
+                break
+
             waiting = WebDriverWait(self.driver, 3).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[2]/ui-view/ui-view-ng-upgrade/ui-view/app-registry/div[2]/div/div[2]/div/div[1]/div/div[1]/a[1]')))
 
             soup = BeautifulSoup(self.driver.find_element(By.XPATH, "//body").get_attribute('outerHTML'), "html.parser")
+
             with open('hrefs.txt', 'a') as file:
                 file.write('\n'.join([x.attrs['href'] for x in soup.find_all('a', {'class': 'result__title ng-star-inserted'})]) + '\n')
+
             with open('dop_hrefs.txt', 'a') as file:
                 file.write(' '.join([x.attrs['href'] for x in soup.find_all('a', {'class': 'result__title ng-star-inserted'})]))
-            print([x.attrs['href'] for x in soup.find_all('a', {'class': 'result__title ng-star-inserted'})])
 
         with open('dop_hrefs.txt', 'a', encoding='utf-8') as file:
             file.write(' ' + city + '\n')
@@ -74,7 +82,13 @@ regions = [x.replace('\n','').replace(' г','').strip() for x in regions ]
 tmp = SP()
 for i in tqdm(regions):
     tmp.get_info(i)
-tmp.get_info('Ак-Довурак')
+
+
+
+
+
+
+tmp.get_info('Белгород')
 
 
 
