@@ -10,6 +10,8 @@ import json
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
+from tqdm import tqdm
+
 
 class SP:
     def __init__(self):
@@ -39,7 +41,8 @@ class SP:
         self.get_page(1, city)
         time.sleep(3)
         check = BeautifulSoup(self.driver.find_element(By.XPATH,"/html/body/div[2]/ui-view/ui-view-ng-upgrade/ui-view/app-registry/div[2]/div/div[1]/h3/span").get_attribute('outerHTML'), "html.parser")
-        total_found = int(check.find("span").text.strip(' '))
+        tot = check.find("span").text
+        total_found = int(tot.replace('\xa0', '').strip())
         print(total_found)
 
         for p in range(1, (total_found//30 + 2)):
@@ -52,37 +55,15 @@ class SP:
 
             soup = BeautifulSoup(self.driver.find_element(By.XPATH, "//body").get_attribute('outerHTML'), "html.parser")
             with open('hrefs.txt', 'a') as file:
-                file.write('\n'.join([x.attrs['href'] for x in soup.find_all('a', {'class': 'result__title ng-star-inserted'})]))
+                file.write('\n'.join([x.attrs['href'] for x in soup.find_all('a', {'class': 'result__title ng-star-inserted'})]) + '\n')
             with open('dop_hrefs.txt', 'a') as file:
                 file.write(' '.join([x.attrs['href'] for x in soup.find_all('a', {'class': 'result__title ng-star-inserted'})]))
             print([x.attrs['href'] for x in soup.find_all('a', {'class': 'result__title ng-star-inserted'})])
 
-        with open('hrefs.txt', 'a') as file:
-            file.write('\n')
         with open('dop_hrefs.txt', 'a', encoding='utf-8') as file:
             file.write(' ' + city + '\n')
 
 
-# '/html/body/div[2]/ui-view/ui-view-ng-upgrade/ui-view/app-registry/div[2]/div/div[1]/h3/span'
-
-
-        # p = 1
-        # self.get_page(p)
-        # soup = BeautifulSoup(self.driver.find_element(By.XPATH, "//body").get_attribute('outerHTML'), "html.parser")
-        # [x.attrs['href'] for x in soup.find_all('a', {'class': 'result__title ng-star-inserted'})]
-
-        # search_box = self.driver.find_element_by_name("text")
-        # search_box.send_keys("Реквизиты организации")
-        # search_box.send_keys(Keys.RETURN)
-        # for p in range(1,34):
-        #         self.get_page(p)
-        #         soup = BeautifulSoup(self.driver.find_element(By.XPATH, "//body").get_attribute('outerHTML'), "html.parser")
-        #         [x.attrs['href'] for x in soup.find_all('a', {'class': 'result__title ng-star-inserted'})]
-        # try:
-        #     while True:
-        #
-        # except:
-        #     pass
 
 with open('regions.txt', 'r',encoding='utf-8') as f:
     regions = f.readlines()
@@ -91,8 +72,9 @@ regions = [x.replace('\n','').replace(' г','').strip() for x in regions ]
 
 
 tmp = SP()
-for i in regions:
+for i in tqdm(regions):
     tmp.get_info(i)
+tmp.get_info('Ак-Довурак')
 
 
 
