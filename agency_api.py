@@ -22,7 +22,6 @@ class AG:
         options.binary_location = CHROME_BIN_LOCATION
         self.driver = selenium.webdriver.Chrome(options=options, service=service)
         self.driver.maximize_window()
-        postgre = {"host": '45.82.153.202', "port": 5432, "db": 'postgres', 'pass': 'passwd'}
         self.conn = sa.create_engine(
             f"postgresql+psycopg2://user_pract:{postgre['pass']}@{postgre['host']}:{postgre['port']}/{postgre['db']}")
 
